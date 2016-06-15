@@ -1,0 +1,219 @@
+/*--------------------------------------------------------------
+x.0 Mixins
+--------------------------------------------------------------*/
+
+@mixin box($bg: #ffffff) {
+    background: $bg;
+    border: 1px solid #f4f4f4;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), 0 5px 6px -6px rgba(0, 0, 0, 0.05);
+}
+
+/*--------------------------------------------------------------
+x.0 Tab & Content Area Structure
+--------------------------------------------------------------*/
+
+.ng-settings-buttons {
+    clear: both;
+    margin: 20px 0;
+    overflow: hidden;
+
+    p {
+        float: left;
+        margin: 0;
+        padding: 0;
+
+        &.submit {
+            margin-right: 5px;
+        }
+    }
+}
+
+/*--------------------------------------------------------------
+x.0 Input Fields
+--------------------------------------------------------------*/
+
+#ng-settings-panel .form-table th {
+    width: 300px;
+
+    .desc {
+        color: #5C5C5C;
+        display: block;
+        font: {
+            size: 13px;
+            weight: normal;
+        }
+        margin-top: 5px;
+    }
+}
+
+.desc {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.ng-hide {
+    display: none !important;
+}
+
+/*--------------------------------------------------------------
+x.0 Border
+--------------------------------------------------------------*/
+
+.ng-border-field-wrap {
+    clear: both;
+    overflow: hidden;
+
+    label {
+        color: #797979;
+        display: block;
+        font: {
+            size: 11px;
+            weight: normal;
+        }
+        text-transform: uppercase;
+    }
+
+    select {
+        display: block;
+        width: 100%;
+    }
+
+    > div {
+        float: left;
+        margin: 0 10px 0 0;
+        //width: 33.3%;
+    }
+}
+
+/*--------------------------------------------------------------
+x.0 Switch
+--------------------------------------------------------------*/
+
+.ng-enable,
+.ng-disable {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+    cursor: pointer;
+    display: block;
+    font: {
+        weight: bold;
+    }
+    float: left;
+
+    &.selected {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 0 rgba(0, 0, 0, .08);
+        color: white;
+    }
+
+    span {
+        display: block;
+        padding: 10px;
+    }
+}
+
+.ng-enable {
+    border-right: none;
+    border-radius: 3px 0 0 3px;
+
+    &.selected {
+        background-color: #64BB75;
+
+    }
+}
+
+.ng-disable {
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+
+    &.selected {
+        background-color: #646464;
+    }
+}
+
+/*--------------------------------------------------------------
+x.0 Sortable Blocks
+--------------------------------------------------------------*/
+
+.sorter {
+    clear: both;
+
+    // Column Heading
+    h3 {
+        text-align: center;
+        text-transform: capitalize;
+    }
+
+    ul {
+        @include box();
+        float: left;
+        margin: 0 15px 0 0;
+        padding: 10px;
+        width: 250px;
+
+        li {
+            background: #f1f1f1;
+            box-sizing: border-box;
+            cursor: move;
+            margin-top: 10px;
+            padding: 5px 10px;
+            position: relative;
+            text-align: center;
+
+            // Button
+            button {
+                background: none;
+                border: none;
+                color: #b6b6b6;
+                cursor: pointer;
+                font: {
+                    size: 85%;
+                }
+                margin-top: 5px;
+                padding: 2px 12px;
+            }
+
+            // Button on hover
+            &:hover {
+                button {
+                    background: #2ea2cc;
+                    color: white;
+                }
+            }
+
+            &:first-child {
+                margin: 0;
+            }
+
+            &.placeholder {
+                background: none;
+                border: 1px dashed #fff;
+                height: 54px;
+            }
+
+            // Dashicon
+            &:before {
+                color: rgba(155, 155, 155, 0.3);
+                content: "\f156";
+                font-family: 'dashicons';
+                position: absolute;
+                top: 0;
+                left: 5px;
+            }
+        }
+
+        // Custom styling for the "disabled" box
+        &#social_sites_disabled {
+            background: #fafafa;
+
+            li {
+                //background: white;
+                background: rgba(155, 155, 155, 0.05);
+
+                &.placeholder {
+                    border-color: #d0d0d0;
+                }
+            }
+        }
+    }
+}
