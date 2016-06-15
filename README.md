@@ -42,10 +42,12 @@ You can add a new site using filters and actions from the plugin. Here's an exam
 
 You can do this by creating a new add-on plugin and using the Naked Social Share filters. Here's an example for changing the Twitter icon:
 
-```function nss_addon_twitter_icon( $icon_html ) {
+```
+function nss_addon_twitter_icon( $icon_html ) {
 	return '<i class="fa fa-twitter-square"></i>';
 }
-add_filter( 'naked_social_share_twitter_icon', 'nss_addon_twitter_icon' );```
+add_filter( 'naked_social_share_twitter_icon', 'nss_addon_twitter_icon' );
+```
 
 For more details, see this page: https://gist.github.com/nosegraze/f00b5101466752213e2d
 
