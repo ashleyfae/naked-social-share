@@ -66,6 +66,9 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.2.7 =
+* Changed the behaviour of the Pinterest share button to allow for image selection.
+
 = 1.2.6 =
 * Added more filters and actions for extending the plugin. See the FAQ for examples: https://wordpress.org/plugins/naked-social-share/faq/
 
@@ -131,5 +134,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.2.6 =
-Added more actions and filters for extending the plugin.
+= 1.2.7 =
+Changed the behaviour of the Pinterest share button to allow for image selection.

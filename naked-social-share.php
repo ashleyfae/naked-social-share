@@ -3,7 +3,7 @@
  * Plugin Name: Naked Social Share
  * Plugin URI: https://shop.nosegraze.com/product/naked-social-share/
  * Description: Simple, unstyled social share icons for theme designers.
- * Version: 1.2.6
+ * Version: 1.2.7
  * Author: Nose Graze
  * Author URI: https://www.nosegraze.com
  * License: GPL2

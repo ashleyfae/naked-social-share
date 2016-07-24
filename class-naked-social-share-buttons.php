@@ -417,7 +417,7 @@ class Naked_Social_Share_Buttons {
 						case 'pinterest' :
 							?>
 							<li class="nss-pinterest">
-								<a href="http://pinterest.com/pin/create/button/?url=<?php echo get_permalink( $this->post ); ?>&media=<?php echo $this->get_featured_image_url(); ?>&description=<?php echo apply_filters( 'naked_social_share_pinterest_text', $this->get_title(), $this->post ); ?>" target="_blank">
+								<a href="#" onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','//assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_pinterest_icon', '<i class="fa fa-pinterest"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'Pinterest', 'naked-social-share' ); ?></span>
 									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
