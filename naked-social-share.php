@@ -40,7 +40,7 @@ include_once plugin_dir_path( __FILE__ ) . 'class-naked-social-share.php';
  * @return Naked_Social_Share
  */
 function Naked_Social_Share() {
-	$instance = Naked_Social_Share::instance( __FILE__, '1.2.6' );
+	$instance = Naked_Social_Share::instance( __FILE__, '1.2.7' );
 
 	return $instance;
 }
