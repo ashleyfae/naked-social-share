@@ -210,10 +210,10 @@ class Naked_Social_Share_Buttons {
 			// Make sure the response came back okay.
 			if ( ! is_wp_error( $pinterest_response ) && wp_remote_retrieve_response_code( $pinterest_response ) == 200 ) {
 				// Remove the annoying repsonseCode() stuff
-				$pinterest_body = json_decode( preg_replace( "/[^(]*\((.*)\)/", "$1", wp_remote_retrieve_body( $pinterest_response ) ) );
+				$pinterest_body = json_decode( preg_replace( "/[^(]*\((.*)\)/", "$1", wp_remote_retrieve_body( $pinterest_response ) ), true );
 				// Get the count
-				if ( $pinterest_body->count && is_numeric( $pinterest_body->count ) ) {
-					$shares['pinterest'] = $pinterest_body->count;
+				if ( array_key_exists( 'count', $pinterest_body ) && $pinterest_body['count'] && is_numeric( $pinterest_body['count'] ) ) {
+					$shares['pinterest'] = $pinterest_body['count'];
 				}
 			}
 		} else {
@@ -378,8 +378,13 @@ class Naked_Social_Share_Buttons {
 	 * @return void
 	 */
 	public function display_share_markup() {
-		$twitter_handle       = $this->settings['twitter_handle'];
-		$social_sites         = $this->settings['social_sites'];
+		$twitter_handle = ( array_key_exists( 'twitter_handle', $this->settings ) && $this->settings['twitter_handle'] ) ? $this->settings['twitter_handle'] : '';
+		$social_sites   = ( array_key_exists( 'social_sites', $this->settings ) && is_array( $this->settings['social_sites'] ) ) ? $this->settings['social_sites'] : false;
+
+		if ( ! is_array( $social_sites ) || ! array_key_exists( 'enabled', $social_sites ) ) {
+			return;
+		}
+
 		$enabled_social_sites = apply_filters( 'naked_social_share_social_sites', $social_sites['enabled'] );
 		?>
 		<div class="naked-social-share">
