@@ -184,17 +184,15 @@ class Naked_Social_Share_Buttons {
 		 * Fetch the share numbers for Facebook if it's enabled.
 		 */
 		if ( array_key_exists( 'facebook', $this->settings['social_sites']['enabled'] ) ) {
-			//$params            = 'select total_count, comment_count, share_count, like_count from link_stat where url = "' . $this->url . '"';
-			//$facebook_url      = 'http://graph.facebook.com/fql?q=' . $params;
-			$facebook_url      = sprintf( 'https://api.facebook.com/method/links.getStats?urls=%s&format=json', $this->url );
+			$facebook_url      = sprintf( 'https://graph.facebook.com/?id=%s', $this->url );
 			$facebook_response = wp_remote_get( esc_url_raw( $facebook_url ) );
 			// Make sure the response came back okay.
 			if ( ! is_wp_error( $facebook_response ) && wp_remote_retrieve_response_code( $facebook_response ) == 200 ) {
-				$facebook_body = json_decode( wp_remote_retrieve_body( $facebook_response ) );
+				$facebook_body = json_decode( wp_remote_retrieve_body( $facebook_response ), true );
 
 				// If the results look good, let's update them.
-				if ( $facebook_body && is_array( $facebook_body ) && array_key_exists( '0', $facebook_body ) ) {
-					$shares['facebook'] = $facebook_body[0]->total_count;
+				if ( $facebook_body && is_array( $facebook_body ) && array_key_exists( 'share', $facebook_body ) && array_key_exists('share_count', $facebook_body['share']) ) {
+					$shares['facebook'] = $facebook_body['share']['share_count'];
 				}
 			}
 		} else {

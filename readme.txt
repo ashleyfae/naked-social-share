@@ -66,6 +66,9 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.2.9 =
+* Fixed issue with Facebook share counts. They should hopefully work again now.
+
 = 1.2.8 =
 * Added a few extra `array_key_exists` checks around the display code to hopefully avoid some errors from popping up.
 
@@ -137,5 +140,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.2.8 =
-Small code tweaks to catch out some errors.
+= 1.2.9 =
+Fixed issue with Facebook share counts. They should hopefully work again now.
