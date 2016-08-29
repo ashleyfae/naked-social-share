@@ -34,6 +34,7 @@ function nss_enqueue_assets() {
 	wp_enqueue_script( 'nss-frontend' );
 
 	$settings = array(
+		'ajaxurl'    => admin_url( 'admin-ajax.php' ),
 		'disable_js' => ( array_key_exists( 'disable_js', $nss_options ) && $nss_options['disable_js'] ) ? true : false,
 		'nonce'      => wp_create_nonce( 'nss_update_share_numbers' )
 	);

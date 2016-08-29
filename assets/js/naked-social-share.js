@@ -37,13 +37,11 @@ jQuery(document).ready(function ($) {
             nonce: NSS.nonce
         };
 
-        $.post(ajaxurl, data, function (response) {
+        $.post(NSS.ajaxurl, data, function (response) {
             if (response.success == true) {
-                console.log(response.data);
                 $.each(response.data, function (siteName, number) {
                     shareWrapper.find('.nss-' + siteName).find('.nss-site-count').text(number);
                 });
-                console.log('done');
             } else {
                 console.log(response);
             }
