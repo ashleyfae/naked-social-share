@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: Naked Social Share
  * Plugin URI: https://shop.nosegraze.com/product/naked-social-share/
  * Description: Simple, unstyled social share icons for theme designers.
