@@ -186,14 +186,14 @@ function nss_get_registered_settings() {
 						'pinterest',
 						'stumbleupon'
 					),
-					'options' => array(
+					'options' => apply_filters( 'naked-social-share/available-sites', array(
 						'twitter'     => __( 'Twitter', 'naked-social-share' ),
 						'facebook'    => __( 'Facebook', 'naked-social-share' ),
 						'pinterest'   => __( 'Pinterest', 'naked-social-share' ),
 						'stumbleupon' => __( 'StumbleUpon', 'naked-social-share' ),
 						'google'      => __( 'Google+', 'naked-social-share' ),
 						'linkedin'    => __( 'LinkedIn', 'naked-social-share' )
-					)
+					) )
 				)
 			)
 		),
@@ -667,7 +667,7 @@ function nss_sorter_callback( $args ) {
 	?>
 
 	<div id="<?php echo nss_sanitize_key( $args['id'] ); ?>" class="sorter">
-		<input type="hidden" class="nss-settings-key" value="naked_social_share_settings_settings">
+		<input type="hidden" class="nss-settings-key" value="naked_social_share_settings">
 
 		<ul id="<?php echo nss_sanitize_key( $args['id'] ); ?>_enabled" class="sortlist_<?php echo esc_attr( $args['id'] ); ?>">
 			<h3><?php _e( 'Enabled', 'naked-social-share' ); ?></h3>
