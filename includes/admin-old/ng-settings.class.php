@@ -98,9 +98,13 @@ class Nose_Graze_Settings {
 		// Add sanitization filters.
 		add_filter( $this->options_slug . '_settings_sanitize_text', array( $this, 'sanitize_text_field' ), 10, 2 );
 		add_filter( $this->options_slug . '_settings_sanitize_color', array( $this, 'sanitize_color_field' ), 10, 2 );
-		add_filter( $this->options_slug . '_settings_sanitize_ubb_sorter', array(
+		add_filter( $this->options_slug . '_settings_sanitize_sorter', array(
 			$this,
-			'sanitize_ubb_sorter_field'
+			'sanitize_sorter_field'
+		), 10, 2 );
+		add_filter( $this->options_slug . '_settings_sanitize_checkbox', array(
+			$this,
+			'sanitize_checkbox_field'
 		), 10, 2 );
 
 		// Enqueue scripts & styles
@@ -312,7 +316,7 @@ class Nose_Graze_Settings {
 
 		// If the settings field doesn't exist in the database, add it.
 		if ( false == get_option( $this->options_slug . '_settings' ) ) {
-			add_option( $this->options_slug . '_settings' );
+			add_option( $this->options_slug . '_settings', array() );
 		}
 
 		// Loop through each settings option to register the tabs.
@@ -508,7 +512,7 @@ class Nose_Graze_Settings {
 		if ( ! empty( $settings[ $tab ]['fields'] ) ) {
 			foreach ( $settings[ $tab ]['fields'] as $key => $value ) {
 				if ( empty( $input[ $key ] ) || ! isset( $input[ $key ] ) ) {
-					$input[$key] = false;
+					$input[ $key ] = false;
 				}
 			}
 		}
@@ -564,6 +568,38 @@ class Nose_Graze_Settings {
 		}
 
 		return $input;
+	}
+
+	/**
+	 * Sanitize Sorter Field
+	 *
+	 * @param string $input The field value to be sanitized.
+	 * @param        $key
+	 *
+	 * @access public
+	 * @since  1.3.0
+	 * @return array
+	 */
+	public function sanitize_sorter_field( $input, $key ) {
+		if ( ! is_array( $input ) ) {
+			return array();
+		}
+
+		return array_map( 'wp_strip_all_tags', $input );
+	}
+
+	/**
+	 * Sanitize Checkbox Field
+	 *
+	 * @param string $input The field value to be sanitized.
+	 * @param        $key
+	 *
+	 * @access public
+	 * @since  1.3.0
+	 * @return bool
+	 */
+	public function sanitize_checkbox_field( $input, $key ) {
+		return ! empty( $input ) ? true : false;
 	}
 
 	/**
@@ -683,11 +719,10 @@ class Nose_Graze_Settings {
 		if ( isset( $options[ $args['id'] ] ) ) {
 			$value = $options[ $args['id'] ];
 		} else {
-			$value = ( isset( $args['std'] ) && $args['std'] == true ) ? 1 : '';
+			$value = ( isset( $args['std'] ) && $args['std'] == true ) ? true : false;
 		}
 
-		$checked = ( intval( $value ) == 1 ) ? checked( 1, $value, false ) : '';
-		$html    = '<input type="checkbox" id="' . $this->options_slug . '_settings[' . $args['id'] . ']" name="' . $this->options_slug . '_settings[' . $args['id'] . ']" value="1" ' . $checked . '>';
+		$html    = '<input type="checkbox" id="' . $this->options_slug . '_settings[' . $args['id'] . ']" name="' . $this->options_slug . '_settings[' . $args['id'] . ']" value="1" ' . checked( $value, true, false ) . '>';
 		echo $html;
 	}
 
@@ -785,7 +820,7 @@ class Nose_Graze_Settings {
 				<br>
 				<img src="<?php echo $option; ?>" alt="<?php echo $key; ?>">
 			</label>
-		<?php
+			<?php
 		}
 	}
 
@@ -989,39 +1024,49 @@ class Nose_Graze_Settings {
 
 		// Get the configuration
 		if ( isset( $options[ $args['id'] ] ) ) {
-			$config = $options[ $args['id'] ];
+			$enabled_keys = $options[ $args['id'] ];
 		} else {
-			$config = isset( $args['std'] ) ? $args['std'] : array();
+			$enabled_keys = isset( $args['std'] ) ? $args['std'] : array();
 		}
 
-		$html = '<div id="' . $args['id'] . '" class="sorter">';
-		$html .= '<input type="hidden" class="ng-settings-key" value="' . $this->options_slug . '_settings">';
+		$all_options   = $args['options'];
+		$disabled_keys = array_diff( array_keys( $all_options ), $enabled_keys );
+		?>
 
-		// Loop through each column
-		foreach ( $config as $column => $section ) {
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="sorter">
+			<input type="hidden" class="ng-settings-key" value="<?php echo esc_attr( $this->options_slug . '_settings' ); ?>">
 
-			$html .= '<ul id="' . $args['id'] . '_' . $column . '" class="sortlist_' . $args['id'] . '"><h3>' . $column . '</h3>';
+			<ul id="<?php echo esc_attr( $args['id'] ); ?>_enabled" class="sortlist_<?php echo esc_attr( $args['id'] ); ?>">
+				<h3><?php _e( 'Enabled', 'naked-social-share' ); ?></h3>
 
-			$html .= '<input class="sorter-placebo" type="hidden" name="' . $this->options_slug . '_settings[' . $args['id'] . '][' . $column . '][placebo]" value="placebo">';
+				<?php foreach ( $enabled_keys as $key ) :
+					if ( ! array_key_exists( $key, $all_options ) ) {
+						continue;
+					}
+					?>
+					<li id="<?php echo esc_attr( $key ); ?>">
+						<input type="hidden" name="<?php echo esc_attr( $this->options_slug ); ?>_settings[<?php echo esc_attr( $args['id'] ); ?>][]" value="<?php echo esc_attr( $key ); ?>" class="sorter-input sorter-input-name">
+						<?php echo $all_options[ $key ]; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 
-			foreach ( $section as $key => $item ) {
-				// Don't add a list item for the placebo.
-				if ( $key == 'placebo' ) {
-					continue;
-				}
-				$html .= '<li id="' . $key . '">';
-				$html .= '<input type="hidden" name="' . $this->options_slug . '_settings[' . $args['id'] . '][' . $column . '][' . $key . '][name]" value="' . esc_attr( $item['name'] ) . '" data-key="name" class="sorter-input sorter-input-name">';
-				$html .= $item['name'];
-				$html .= '</li>';
-			}
+			<ul id="<?php echo esc_attr( $args['id'] ); ?>_disabled" class="sortlist_<?php echo esc_attr( $args['id'] ); ?>">
+				<h3><?php _e( 'Disabled', 'naked-social-share' ); ?></h3>
 
-			$html .= '</ul>';
-
-		}
-
-		$html .= '</div>';
-
-		echo $html;
+				<?php foreach ( $disabled_keys as $key ) :
+					if ( ! array_key_exists( $key, $all_options ) ) {
+						continue;
+					}
+					?>
+					<li id="<?php echo esc_attr( $key ); ?>">
+						<input type="hidden" name="" value="<?php echo esc_attr( $key ); ?>" class="sorter-input sorter-input-name">
+						<?php echo $all_options[ $key ]; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php
 	}
 
 	/**

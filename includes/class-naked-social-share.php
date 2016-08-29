@@ -7,6 +7,17 @@
  * @copyright Copyright (c) 2015, Ashley Evans
  * @license   GPL2+
  */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class Naked_Social_Share
+ *
+ * @since 1.0.0
+ */
 class Naked_Social_Share {
 
 	/**
@@ -109,7 +120,7 @@ class Naked_Social_Share {
 		// Include necessary files.
 		$this->includes();
 		// Load settings into the options panel.
-		$this->register_settings();
+		//$this->register_settings();
 
 		// Add a link to the settings panel on the plugin listing.
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ), array( $this, 'settings_link' ) );
@@ -178,7 +189,9 @@ class Naked_Social_Share {
 		if ( ! class_exists( 'Nose_Graze_Settings' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . 'admin/ng-settings.class.php';
 		}
+
 		require_once plugin_dir_path( __FILE__ ) . 'class-naked-social-share-buttons.php';
+		require_once plugin_dir_path( __FILE__ ) . 'functions.php';
 	}
 
 	/**
@@ -276,7 +289,7 @@ class Naked_Social_Share {
 	 */
 	private function upgrade( $db_version ) {
 		/*
-		 * Upgrade to 1.2.0 to add new social sites.
+		 * 1.2.0 - Add new social sites.
 		 */
 		if ( version_compare( $db_version, '1.2.0', '<' ) ) {
 			$social_sites = $this->settings['social_sites'];
@@ -291,6 +304,28 @@ class Naked_Social_Share {
 
 				update_option( 'naked_ss_settings', $this->settings );
 			}
+		}
+
+		/*
+		 * 1.3.0 - Switch formatting of enabled sites array.
+		 */
+		if ( version_compare( $db_version, '1.3.0', '<' ) ) {
+			$social_sites = $this->settings['social_sites']['enabled'];
+
+			if ( array_key_exists( 'placebo', $social_sites ) ) {
+				unset( $social_sites['placebo'] );
+			}
+
+			if ( array_key_exists( 'enabled', $this->settings ) ) {
+				unset( $this->settings['enabled'] );
+			}
+			if ( array_key_exists( 'disabled', $this->settings ) ) {
+				unset( $this->settings['disabled'] );
+			}
+
+			$this->settings['social_sites'] = array_keys( $social_sites );
+
+			update_option( 'naked_ss__settings', $this->settings );
 		}
 	}
 
@@ -375,33 +410,23 @@ class Naked_Social_Share {
 						'placeholder' => 'NoseGraze',
 					),
 					'social_sites'     => array(
-						'id'   => 'social_sites',
-						'name' => __( 'Social Media Sites', 'naked-social-share' ),
-						'desc' => __( 'Drag the sites you want to display buttons for into the "Enabled" column.', 'naked-social-share' ),
-						'type' => 'sorter',
-						'std'  => array(
-							'enabled'  => array(
-								'twitter'     => array(
-									'name' => __( 'Twitter', 'naked-social-share' ),
-								),
-								'facebook'    => array(
-									'name' => __( 'Facebook', 'naked-social-share' ),
-								),
-								'pinterest'   => array(
-									'name' => __( 'Pinterest', 'naked-social-share' ),
-								),
-								'stumbleupon' => array(
-									'name' => __( 'StumbleUpon', 'naked-social-share' )
-								),
-							),
-							'disabled' => array(
-								'google'   => array(
-									'name' => __( 'Google+', 'naked-social-share' )
-								),
-								'linkedin' => array(
-									'name' => __( 'LinkedIn', 'naked-social-share' )
-								)
-							)
+						'id'      => 'social_sites',
+						'name'    => __( 'Social Media Sites', 'naked-social-share' ),
+						'desc'    => __( 'Drag the sites you want to display buttons for into the "Enabled" column.', 'naked-social-share' ),
+						'type'    => 'sorter',
+						'std'     => array(
+							'twitter',
+							'facebook',
+							'pinterest',
+							'stumbleupon'
+						),
+						'options' => array(
+							'twitter'     => __( 'Twitter', 'naked-social-share' ),
+							'facebook'    => __( 'Facebook', 'naked-social-share' ),
+							'pinterest'   => __( 'Pinterest', 'naked-social-share' ),
+							'stumbleupon' => __( 'StumbleUpon', 'naked-social-share' ),
+							'google'      => __( 'Google+', 'naked-social-share' ),
+							'linkedin'    => __( 'LinkedIn', 'naked-social-share' )
 						)
 					)
 				)
@@ -442,10 +467,15 @@ class Naked_Social_Share {
 			wp_enqueue_style( $this->_token . '-frontend' );
 		}
 
-		if ( ! isset( $this->settings['disable_js'] ) || $this->settings['disable_js'] === false ) {
-			wp_register_script( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'js/naked-social-share' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version, true );
-			wp_enqueue_script( $this->_token . '-frontend' );
-		}
+		wp_register_script( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'js/naked-social-share' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version, true );
+		wp_enqueue_script( $this->_token . '-frontend' );
+
+		$settings = array(
+			'disable_js' => ( array_key_exists( 'disable_js', $this->settings ) && $this->settings['disable_js'] ) ? true : false,
+			'nonce'      => wp_create_nonce( 'nss_update_share_numbers' )
+		);
+
+		wp_localize_script( $this->_token . '-frontend', 'NSS', $settings );
 	}
 
 	/**

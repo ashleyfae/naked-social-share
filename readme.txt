@@ -44,6 +44,16 @@ Open up your theme file (for example, `single.php`) and place this code exactly 
 
 The share counters are cached for 3 hours to improve loading times and to avoid making API calls on every single page load.
 
+= Will this plugin slow down my site? =
+
+If you opt to display share counts, then the plugin uses third party APIs to get that information. However, these calls are made via ajax after the page is loaded, so you won't notice any impact on loading time. Here's how the process works:
+
+* Page loads immediately with saved share numbers.
+* If the cache has expired, then JavaScript picks that up and makes an ajax call to fetch new numbers.
+* The new numbers are saved in the background and the cache expiry is updated.
+* The page is updated via JavaScript with the new numbers.
+* On the next page load, the new saved numbers are displayed and since the cache is now valid, no ajax call is made.
+
 = How can I extend the plugin to add a new site? =
 
 You can add a new site using filters and actions from the plugin. Here's an example showing how to create an add-on plugin to add 'Email' as a social site option: https://gist.github.com/nosegraze/73e950885fdbbecb20fe
@@ -65,6 +75,12 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 2. A screenshot of the social share icons automatically added to the Twenty Fifteen theme. This also shows the default button styles applied.
 
 == Changelog ==
+
+= 1.3.0 =
+* Share numbers are now updated via ajax to stop the page from taking longer to load when the cache is expired.
+* Updated default styles.
+* Added sanitization callbacks to settings.
+* Updated how the "Social Media Sites" sorter array is saved. **NOTE:** If you used [this tutorial](https://gist.github.com/nosegraze/73e950885fdbbecb20fe) to add a custom social media site, you will need to update your code.
 
 = 1.2.9 =
 * Fixed issue with Facebook share counts. They should hopefully work again now.

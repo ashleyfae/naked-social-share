@@ -7,6 +7,17 @@
  * @copyright Copyright (c) 2015, Ashley Evans
  * @license   GPL2+
  */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class Naked_Social_Share_Buttons
+ *
+ * @since 1.0.0
+ */
 class Naked_Social_Share_Buttons {
 
 	/**
@@ -34,7 +45,16 @@ class Naked_Social_Share_Buttons {
 	 * @access public
 	 * @since  1.0.0
 	 */
-	public $share_numbers = array();
+	public $share_numbers;
+
+	/**
+	 * Expiry timestamp
+	 *
+	 * @var string
+	 * @access public
+	 * @since  1.3.0
+	 */
+	public $expires_timestamp;
 
 	/**
 	 * Whether or not we should cache the social numbers.
@@ -43,7 +63,7 @@ class Naked_Social_Share_Buttons {
 	 * @access public
 	 * @since  1.0.0
 	 */
-	public $cache = true;
+	public $cache = false;
 
 	/**
 	 * How in seconds long we should cache the social share numbers.
@@ -68,31 +88,33 @@ class Naked_Social_Share_Buttons {
 	 *
 	 * Sets the post object and loads the saved share numbers.
 	 *
-	 * @param null|object $post
+	 * @param null|WP_Post|int $post Post object, post ID, or leave null to auto fetch current post.
 	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return void
 	 */
 	public function __construct( $post = null ) {
-		$this->post = $post;
 
-		// If no post object was provided, use the current post.
-		if ( $this->post == null ) {
+		if ( is_a( 'WP_Post', $post ) ) {
+			$this->post = $post;
+		} elseif ( is_numeric( $post ) ) {
+			$this->post = get_post( $post );
+		} else {
 			global $post;
 			$this->post = $post;
 		}
 
 		// Load the settings.
-		$naked_social_share = Naked_Social_Share();
-		$this->settings     = $naked_social_share->settings;
+		global $nss_options;
+		$this->settings = $nss_options;
 
-		$this->url = get_permalink( $this->post );
+		$this->url = apply_filters( 'naked-social-share/post-permalink', get_permalink( $this->post ), $this->post, $this );
 
-		if ( $this->settings['disable_counters'] != 1 ) {
-			$this->share_numbers = get_post_meta( $this->post->ID, 'naked_shares_count', true );
+		if ( ! array_key_exists( 'disable_counters', $this->settings ) || ! $this->settings['disable_counters'] ) {
 			$this->share_numbers = $this->get_share_numbers();
 		}
+
 	}
 
 	/**
@@ -126,7 +148,38 @@ class Naked_Social_Share_Buttons {
 	}
 
 	/**
-	 * Gets the social share numbers for each site.
+	 * Is Cache Expired
+	 *
+	 * Checks to see if the share numbers have expired. This will return true if
+	 * any of the following apply:
+	 *
+	 *      `$this->cache` is set to false (for debugging only).
+	 *      The timestamp for the expiry date is in the past.
+	 *
+	 * @access public
+	 * @since  1.3.0
+	 * @return bool
+	 */
+	public function is_expired() {
+		$is_expired = false;
+
+		// Don't cache, so they're always expired.
+		if ( $this->cache === false ) {
+			$is_expired = true;
+		}
+
+		// They're expired.
+		if ( is_numeric( $this->expires_timestamp ) && $this->expires_timestamp < time() ) {
+			$is_expired = true;
+		}
+
+		return apply_filters( 'naked-social-share/share-counts-expired', $is_expired, $this->post, $this );
+	}
+
+	/**
+	 * Gets the saved social share numbers for each site.
+	 *
+	 * If there are no numbers present, then we use 0 instead.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -134,9 +187,18 @@ class Naked_Social_Share_Buttons {
 	 */
 	public function get_share_numbers() {
 
-		// If there are no saved share numbers, set them all to 0.
-		if ( empty( $this->share_numbers ) || ! is_array( $this->share_numbers ) || ! count( $this->share_numbers ) || ! isset( $this->share_numbers['shares'] ) ) {
-			$shares = array(
+		if ( ! isset( $this->share_numbers ) ) {
+			$share_info = get_post_meta( $this->post->ID, 'naked_shares_count', true );
+
+			if ( is_array( $share_info ) && array_key_exists( 'shares', $share_info ) && array_key_exists( 'expire', $share_info ) ) {
+				$shares                  = $share_info['shares'];
+				$this->expires_timestamp = $share_info['expire'];
+			} else {
+				$shares                  = array();
+				$this->expires_timestamp = strtotime( '1 minute ago' );
+			}
+
+			$default_shares = array(
 				'twitter'     => 0,
 				'facebook'    => 0,
 				'pinterest'   => 0,
@@ -144,46 +206,33 @@ class Naked_Social_Share_Buttons {
 				'google'      => 0,
 				'linkedin'    => 0
 			);
-		} else {
-			// If we don't want to cache the numbers, remove the expiry time.
-			if ( $this->cache === false ) {
-				$this->share_numbers['expire'] = false;
-			}
-			// If the cache hasn't expired, return the shares straight away.
-			if ( is_numeric( $this->share_numbers['expire'] ) && $this->share_numbers['expire'] > time() ) {
-				return $this->share_numbers['shares'];
-			}
 
-			$shares = $this->share_numbers['shares'];
+			$final_shares = wp_parse_args( $shares, $default_shares );
+
+			$this->share_numbers = apply_filters( 'naked-social-share/get-share-numbers', $final_shares, $this->post, $this );
 		}
 
-		/*
-		 * Fetch the share numbers for Twitter if it's enabled.
-		 */
-		/*if ( array_key_exists( 'twitter', $this->settings['social_sites']['enabled'] ) ) {
-			$twitter_url      = 'http://urls.api.twitter.com/1/urls/count.json?url=' . $this->url;
-			$twitter_response = wp_remote_get( esc_url_raw( $twitter_url ) );
-			// Make sure the response came back okay.
-			if ( ! is_wp_error( $twitter_response ) && wp_remote_retrieve_response_code( $twitter_response ) == 200 ) {
-				$twitter_body = json_decode( wp_remote_retrieve_body( $twitter_response ) );
+		return $this->share_numbers;
 
-				// If the results look okay, update them.
-				if ( $twitter_body->count && is_numeric( $twitter_body->count ) ) {
-					$shares['twitter'] = $twitter_body->count;
-				}
-			}
-		} else {
-			$shares['twitter'] = 0;
-		}*/
+	}
 
-		if ( ! array_key_exists( 'twitter', $shares ) ) {
-			$shares['twitter'] = 0;
-		}
+	/**
+	 * Update Share Numbers
+	 *
+	 * Get new values from the APIs.
+	 *
+	 * @access public
+	 * @since  1.3.0
+	 * @return array
+	 */
+	public function update_share_numbers() {
+
+		$shares = $this->get_share_numbers();
 
 		/*
 		 * Fetch the share numbers for Facebook if it's enabled.
 		 */
-		if ( array_key_exists( 'facebook', $this->settings['social_sites']['enabled'] ) ) {
+		if ( in_array( 'facebook', $this->settings['social_sites'] ) ) {
 			$facebook_url      = sprintf( 'https://graph.facebook.com/?id=%s', $this->url );
 			$facebook_response = wp_remote_get( esc_url_raw( $facebook_url ) );
 			// Make sure the response came back okay.
@@ -191,7 +240,7 @@ class Naked_Social_Share_Buttons {
 				$facebook_body = json_decode( wp_remote_retrieve_body( $facebook_response ), true );
 
 				// If the results look good, let's update them.
-				if ( $facebook_body && is_array( $facebook_body ) && array_key_exists( 'share', $facebook_body ) && array_key_exists('share_count', $facebook_body['share']) ) {
+				if ( $facebook_body && is_array( $facebook_body ) && array_key_exists( 'share', $facebook_body ) && array_key_exists( 'share_count', $facebook_body['share'] ) ) {
 					$shares['facebook'] = $facebook_body['share']['share_count'];
 				}
 			}
@@ -202,7 +251,7 @@ class Naked_Social_Share_Buttons {
 		/*
 		 * Fetch the share numbers for Pinterest if it's enabled.
 		 */
-		if ( array_key_exists( 'pinterest', $this->settings['social_sites']['enabled'] ) ) {
+		if ( in_array( 'pinterest', $this->settings['social_sites'] ) ) {
 			$pinterest_url      = 'http://api.pinterest.com/v1/urls/count.json?callback=receiveCount&url=' . $this->url;
 			$pinterest_response = wp_remote_get( esc_url_raw( $pinterest_url ) );
 			// Make sure the response came back okay.
@@ -221,7 +270,7 @@ class Naked_Social_Share_Buttons {
 		/*
 		 * Fetch the share numbers for StumbleUpon if it's enabled.
 		 */
-		if ( array_key_exists( 'pinterest', $this->settings['social_sites']['enabled'] ) ) {
+		if ( in_array( 'pinterest', $this->settings['social_sites'] ) ) {
 			$stumble_url      = 'http://www.stumbleupon.com/services/1.01/badge.getinfo?url=' . $this->url;
 			$stumble_response = wp_remote_get( esc_url_raw( $stumble_url ) );
 			// Make sure the response came back okay.
@@ -238,7 +287,7 @@ class Naked_Social_Share_Buttons {
 		/*
 		 * Fetch the share numbers for Google+ if it's enabled.
 		 */
-		if ( array_key_exists( 'google', $this->settings['social_sites']['enabled'] ) ) {
+		if ( in_array( 'google', $this->settings['social_sites'] ) ) {
 			$shares['google'] = $this->get_plus_ones( $this->url );
 		} else {
 			$shares['google'] = 0;
@@ -247,7 +296,7 @@ class Naked_Social_Share_Buttons {
 		/*
 		 * Fetch the share numbers for LinkedIn if it's enabled.
 		 */
-		if ( array_key_exists( 'linkedin', $this->settings['social_sites']['enabled'] ) ) {
+		if ( in_array( 'linkedin', $this->settings['social_sites'] ) ) {
 			$linked_url      = 'https://www.linkedin.com/countserv/count/share?url=' . $this->url . '&format=json';
 			$linked_response = wp_remote_get( esc_url_raw( $linked_url ) );
 			// Make sure the response came back okay.
@@ -271,13 +320,13 @@ class Naked_Social_Share_Buttons {
 		);
 
 		// Update the numbers and expiry time in the meta data.
-		update_post_meta( $this->post->ID, 'naked_shares_count', $final_shares );
+		update_post_meta( $this->post->ID, 'naked_shares_count', apply_filters( 'naked-social-share/update-share-numbers', $final_shares, $this->post, $this ) );
 
 		// Update the variable here.
-		$this->share_numbers = $final_shares;
+		$this->share_numbers = $final_shares['shares'];
 
 		// Return the numbers.
-		return $shares;
+		return $this->share_numbers;
 
 	}
 
@@ -379,15 +428,15 @@ class Naked_Social_Share_Buttons {
 		$twitter_handle = ( array_key_exists( 'twitter_handle', $this->settings ) && $this->settings['twitter_handle'] ) ? $this->settings['twitter_handle'] : '';
 		$social_sites   = ( array_key_exists( 'social_sites', $this->settings ) && is_array( $this->settings['social_sites'] ) ) ? $this->settings['social_sites'] : false;
 
-		if ( ! is_array( $social_sites ) || ! array_key_exists( 'enabled', $social_sites ) ) {
+		if ( ! is_array( $social_sites ) || ! count( $social_sites ) ) {
 			return;
 		}
 
-		$enabled_social_sites = apply_filters( 'naked_social_share_social_sites', $social_sites['enabled'] );
+		$enabled_social_sites = apply_filters( 'naked_social_share_social_sites', $social_sites );
 		?>
-		<div class="naked-social-share">
+		<div class="naked-social-share<?php echo $this->is_expired() ? ' nss-update-share-numbers' : ''; ?>" data-post-id="<?php echo absint( $this->post->ID ); ?>">
 			<ul>
-				<?php foreach ( $enabled_social_sites as $key => $site_name ) { ?>
+				<?php foreach ( $enabled_social_sites as $key ) { ?>
 					<?php switch ( $key ) {
 						case 'twitter' :
 							?>

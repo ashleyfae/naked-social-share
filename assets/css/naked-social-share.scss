@@ -3,9 +3,19 @@
     margin: 10px 0;
     padding: 0;
 
+    ul {
+        padding: 0;
+    }
+
     li {
         display: inline-block;
         margin: 0 5px 0 0;
+        padding: 0;
+
+        // In case they've added custom bullets or something.
+        &:before {
+            display: none;
+        }
     }
 
     a {
