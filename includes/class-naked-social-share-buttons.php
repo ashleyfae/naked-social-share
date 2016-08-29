@@ -63,7 +63,7 @@ class Naked_Social_Share_Buttons {
 	 * @access public
 	 * @since  1.0.0
 	 */
-	public $cache = false;
+	public $cache = true;
 
 	/**
 	 * How in seconds long we should cache the social share numbers.
