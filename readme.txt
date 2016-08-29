@@ -78,9 +78,11 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 = 1.3.0 =
 * Share numbers are now updated via ajax to stop the page from taking longer to load when the cache is expired.
-* Updated default styles.
+* Updated default styles to hide `:before` and reset some padding.
+* Refactored the settings panel code.
 * Added sanitization callbacks to settings.
-* Updated how the "Social Media Sites" sorter array is saved. **NOTE:** If you used [this tutorial](https://gist.github.com/nosegraze/73e950885fdbbecb20fe) to add a custom social media site, you will need to update your code.
+* Updated how the "Social Media Sites" sorter array is saved. **NOTE:** If you used [this tutorial](https://gist.github.com/nosegraze/73e950885fdbbecb20fe) to add a custom social media site, you will need to update your code. Follow that link for the new details.
+* Deleted screenshots from plugin file.
 
 = 1.2.9 =
 * Fixed issue with Facebook share counts. They should hopefully work again now.
@@ -156,5 +158,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.2.9 =
-Fixed issue with Facebook share counts. They should hopefully work again now.
+= 1.3.0 =
+Share counts are now loaded via ajax to improve loading times. Read changelog if you added custom sites.

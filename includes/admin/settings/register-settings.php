@@ -659,7 +659,7 @@ function nss_sorter_callback( $args ) {
 	if ( isset( $nss_options[ $args['id'] ] ) ) {
 		$enabled_keys = $nss_options[ $args['id'] ];
 	} else {
-		$enabled_keys = isset( $args['std'] ) ? $args['std'] : '';
+		$enabled_keys = isset( $args['std'] ) ? $args['std'] : array();
 	}
 
 	$all_options   = $args['options'];

@@ -156,6 +156,8 @@ if ( ! class_exists( 'Naked_Social_Share' ) ) :
 				require_once NSS_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			}
 
+			require_once NSS_PLUGIN_DIR . 'includes/install.php';
+
 		}
 
 		/**
