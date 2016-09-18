@@ -111,7 +111,7 @@ class Naked_Social_Share_Buttons {
 
 		$this->url = apply_filters( 'naked-social-share/post-permalink', get_permalink( $this->post ), $this->post, $this );
 
-		if ( ! array_key_exists( 'disable_counters', $this->settings ) || ! $this->settings['disable_counters'] ) {
+		if ( ! nss_get_option( 'nss_get_option' ) ) {
 			$this->share_numbers = $this->get_share_numbers();
 		}
 
@@ -436,6 +436,7 @@ class Naked_Social_Share_Buttons {
 		?>
 		<div class="naked-social-share<?php echo $this->is_expired() ? ' nss-update-share-numbers' : ''; ?>" data-post-id="<?php echo absint( $this->post->ID ); ?>">
 			<ul>
+				<?php do_action( 'naked-social-share/display/before-sites', $this ); ?>
 				<?php foreach ( $enabled_social_sites as $key ) { ?>
 					<?php switch ( $key ) {
 						case 'twitter' :
@@ -444,7 +445,7 @@ class Naked_Social_Share_Buttons {
 								<a href="http://www.twitter.com/intent/tweet?url=<?php echo urlencode( get_permalink( $this->post ) ) ?><?php echo ( ! empty( $twitter_handle ) ) ? '&via=' . $twitter_handle : ''; ?>&text=<?php echo apply_filters( 'naked_social_share_twitter_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_twitter_icon', '<i class="fa fa-twitter"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'Twitter', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 && $this->share_numbers['twitter'] != 0 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) && $this->share_numbers['twitter'] != 0 ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'twitter', $this->share_numbers ) ? $this->share_numbers['twitter'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -458,7 +459,7 @@ class Naked_Social_Share_Buttons {
 								<a href="http://www.facebook.com/sharer/sharer.php?u=<?php echo get_permalink( $this->post ); ?>&t=<?php echo apply_filters( 'naked_social_share_facebook_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_facebook_icon', '<i class="fa fa-facebook"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'Facebook', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'facebook', $this->share_numbers ) ? $this->share_numbers['facebook'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -472,7 +473,7 @@ class Naked_Social_Share_Buttons {
 								<a href="#" onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','//assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_pinterest_icon', '<i class="fa fa-pinterest"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'Pinterest', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'pinterest', $this->share_numbers ) ? $this->share_numbers['pinterest'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -486,7 +487,7 @@ class Naked_Social_Share_Buttons {
 								<a href="http://www.stumbleupon.com/submit?url=<?php echo get_permalink( $this->post ); ?>&title=<?php echo apply_filters( 'naked_social_share_stumbleupon_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_stumbleupon_icon', '<i class="fa fa-stumbleupon"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'StumbleUpon', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'stumbleupon', $this->share_numbers ) ? $this->share_numbers['stumbleupon'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -500,7 +501,7 @@ class Naked_Social_Share_Buttons {
 								<a href="https://plus.google.com/share?url=<?php echo get_permalink( $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_google_icon', '<i class="fa fa-google-plus"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'Google+', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'google', $this->share_numbers ) ? $this->share_numbers['google'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -514,7 +515,7 @@ class Naked_Social_Share_Buttons {
 								<a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode( get_permalink( $this->post ) ); ?>&title=<?php echo apply_filters( 'naked_social_share_linkedin_text', $this->get_title(), $this->post ); ?>&source=<?php echo urlencode( get_bloginfo( 'name' ) ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_linkedin_icon', '<i class="fa fa-linkedin"></i>' ); ?>
 									<span class="nss-site-name"><?php _e( 'LinkedIn', 'naked-social-share' ); ?></span>
-									<?php if ( $this->settings['disable_counters'] != 1 ) : ?>
+									<?php if ( ! nss_get_option( 'nss_get_option' ) ) : ?>
 										<span class="nss-site-count"><?php echo array_key_exists( 'linkedin', $this->share_numbers ) ? $this->share_numbers['linkedin'] : 0; ?></span>
 									<?php endif; ?>
 								</a>
@@ -523,8 +524,9 @@ class Naked_Social_Share_Buttons {
 							break;
 					}
 
-					do_action( 'naked_social_share_display_buttons', $key, $this->share_numbers, $this->post, $this->settings['disable_counters'] );
+					do_action( 'naked_social_share_display_buttons', $key, $this->share_numbers, $this->post, nss_get_option( 'nss_get_option' ) );
 				} ?>
+				<?php do_action( 'naked-social-share/display/after-sites', $this ); ?>
 			</ul>
 		</div>
 		<?php

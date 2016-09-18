@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function nss_get_option( $key = '', $default = false ) {
 	global $nss_options;
 
-	$value = ! empty( $nss_options[ $key ] ) ? $nss_options[ $key ] : $default;
+	$value = ( is_array( $nss_options ) && array_key_exists( $key, $nss_options ) ) ? $nss_options[ $key ] : $default;
 	$value = apply_filters( 'naked-social-share/options/get', $value, $key, $default );
 
 	return apply_filters( 'naked-social-share/options/get/' . $key, $value, $key, $default );
@@ -550,7 +550,7 @@ function nss_text_callback( $args ) {
 		$name = 'name="naked_social_share_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
 
-	$type     = ( array_key_exists( 'options', $args ) && array_key_exists( 'type', $args['options'] ) ) ? $args['options']['type'] : 'text';
+	$type     = ( array_key_exists( 'options', $args ) && is_array( $args['options'] ) && array_key_exists( 'type', $args['options'] ) ) ? $args['options']['type'] : 'text';
 	$readonly = ( array_key_exists( 'readonly', $args ) && $args['readonly'] === true ) ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	?>
