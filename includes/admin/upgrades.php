@@ -29,8 +29,6 @@ function nss_check_upgrades() {
 		$version_number = 0;
 	}
 
-	//$version_number = '1.2.9';
-
 	// The versions match - bail.
 	if ( $version_number == NSS_VERSION ) {
 		return;
