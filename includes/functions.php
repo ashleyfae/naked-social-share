@@ -12,6 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Load Front-End Aassets
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function nss_enqueue_assets() {
 	global $nss_options;
 
@@ -109,6 +115,28 @@ function nss_auto_add_buttons( $content ) {
 }
 
 add_filter( 'the_content', 'nss_auto_add_buttons' );
+
+/**
+ * Button Shortcode
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @since 1.3.0
+ * @return string
+ */
+function nss_buttons_shortcode( $atts, $content = '' ) {
+
+	// @todo do something with attributes
+
+	ob_start();
+	naked_social_share_buttons();
+
+	return apply_filters( 'naked-social-share/shortcode/output', ob_get_clean(), $atts, $content );
+
+}
+
+add_shortcode( 'naked-social-share', 'nss_buttons_shortcode' );
 
 /**
  * Ajax CB: Update Share Numbers
