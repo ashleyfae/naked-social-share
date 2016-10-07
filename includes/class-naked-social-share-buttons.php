@@ -438,7 +438,7 @@ class Naked_Social_Share_Buttons {
 			<ul>
 				<?php do_action( 'naked-social-share/display/before-sites', $this ); ?>
 				<?php foreach ( $enabled_social_sites as $key ) { ?>
-						<?php switch ( $key ) {
+					<?php switch ( $key ) {
 						case 'twitter' :
 							?>
 							<li class="nss-twitter">
@@ -543,14 +543,11 @@ class Naked_Social_Share_Buttons {
 	 * @return string
 	 */
 	public function get_title( $urlencode = true ) {
-		$title_raw     = get_the_title( $this->post );
+		$title_raw     = wp_strip_all_tags( get_the_title( $this->post ) );
 		$title_decoded = html_entity_decode( $title_raw );
+		$final_title   = $urlencode ? urlencode( $title_decoded ) : $title_decoded;
 
-		if ( $urlencode != true ) {
-			return $title_decoded;
-		}
-
-		return urlencode( $title_decoded );
+		return apply_filters( 'naked_social_share_get_title', $final_title, $this->post, $title_raw, $this );
 	}
 
 }

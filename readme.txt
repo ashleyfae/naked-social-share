@@ -76,6 +76,10 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.3.1 =
+* Strip tags from post titles.
+* Added filter to `get_title()` method.
+
 = 1.3.0 =
 * Share numbers are now updated via ajax to stop the page from taking longer to load when the cache is expired.
 * Updated default styles to hide `:before` and reset some padding.
