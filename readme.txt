@@ -76,6 +76,9 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.3.2 =
+* JavaScript file is no longer loaded if "Disable JavaScript" is checked and "Disable Share Counters" is checked.
+
 = 1.3.1 =
 * Strip tags from post titles.
 * Added filter to `get_title()` method.
