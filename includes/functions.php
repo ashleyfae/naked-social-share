@@ -19,21 +19,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function nss_enqueue_assets() {
-	global $nss_options;
-
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	// Load Font Awesome if it's enabled.
-	if ( isset( $nss_options['load_fa'] ) && $nss_options['load_fa'] == true ) {
+	if ( nss_get_option( 'load_styles' ) ) {
 		wp_register_style( 'font-awesome', NSS_PLUGIN_URL . 'assets/css/font-awesome.min.css', array(), '4.3.0' );
 		wp_enqueue_style( 'font-awesome' );
 	}
 
 	// Load the default styles if they're enabled.
-	if ( isset( $nss_options['load_styles'] ) && $nss_options['load_styles'] == true ) {
+	if ( nss_get_option( 'load_styles' ) ) {
 		wp_register_style( 'nss-frontend', NSS_PLUGIN_URL . 'assets/css/naked-social-share.css', array(), NSS_VERSION );
 		wp_enqueue_style( 'nss-frontend' );
+	}
+
+	// If disable JS is turned on AND follower numbers are turned off, bail now.
+	if ( nss_get_option( 'disable_js' ) && nss_get_option( 'disable_counters' ) ) {
+		return;
 	}
 
 	wp_register_script( 'nss-frontend', NSS_PLUGIN_URL . 'assets/js/naked-social-share' . $suffix . '.js', array( 'jquery' ), NSS_VERSION, true );
@@ -41,7 +44,7 @@ function nss_enqueue_assets() {
 
 	$settings = array(
 		'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-		'disable_js' => ( array_key_exists( 'disable_js', $nss_options ) && $nss_options['disable_js'] ) ? true : false,
+		'disable_js' => nss_get_option( 'disable_js' ) ? true : false,
 		'nonce'      => wp_create_nonce( 'nss_update_share_numbers' )
 	);
 
