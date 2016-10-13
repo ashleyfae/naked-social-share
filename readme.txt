@@ -79,6 +79,7 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 = 1.3.1 =
 * Strip tags from post titles.
 * Added filter to `get_title()` method.
+* Fixed problem with disabling counters not working.
 
 = 1.3.0 =
 * Share numbers are now updated via ajax to stop the page from taking longer to load when the cache is expired.
@@ -162,5 +163,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.3.0 =
-Share counts are now loaded via ajax to improve loading times. Read changelog if you added custom sites.
+= 1.3.1 =
+Fixed problem with disabling share counters not working.
