@@ -166,5 +166,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.3.1 =
-Fixed problem with disabling share counters not working.
+= 1.3.2 =
+* JavaScript file is no longer loaded if "Disable JavaScript" is checked and "Disable Share Counters" is checked.
