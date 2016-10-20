@@ -76,6 +76,10 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.3.4 =
+* Fixed problem with Font Awesome not being loaded, even when checked.
+* Sorry for 5 million updates in such quick succession. I know it sucks.
+
 = 1.3.3 =
 * Pinterest no longer opens in a new tab.
 
@@ -169,5 +173,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.3.3 =
-* Pinterest no longer opens in a new tab.
+= 1.3.4 =
+* Fixed problem with Font Awesome not being loaded, even when checked.
