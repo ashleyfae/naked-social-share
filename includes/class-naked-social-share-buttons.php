@@ -470,7 +470,7 @@ class Naked_Social_Share_Buttons {
 						case 'pinterest' :
 							?>
 							<li class="nss-pinterest">
-								<a href="#" onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','//assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);" target="_blank">
+								<a href="#" onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','//assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);">
 									<?php echo apply_filters( 'naked_social_share_pinterest_icon', '<i class="fa fa-pinterest"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'Pinterest', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) ) : ?>
