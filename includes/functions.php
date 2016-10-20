@@ -23,7 +23,7 @@ function nss_enqueue_assets() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	// Load Font Awesome if it's enabled.
-	if ( nss_get_option( 'load_styles' ) ) {
+	if ( nss_get_option( 'load_fa' ) ) {
 		wp_register_style( 'font-awesome', NSS_PLUGIN_URL . 'assets/css/font-awesome.min.css', array(), '4.3.0' );
 		wp_enqueue_style( 'font-awesome' );
 	}
