@@ -88,25 +88,13 @@ function nss_auto_add_buttons( $content ) {
 	global $post;
 	$post_type = get_post_type( $post );
 
-	// This isn't a post or a page -- bail.
-	if ( $post_type != 'page' && $post_type != 'post' ) {
+	// Bail if this is a singular page and we haven't specified to add buttons to this CPT.
+	if ( is_single() && ! array_key_exists( $post_type, $auto_add_to ) ) {
 		return $content;
 	}
 
-	// This is a page and we haven't specified to add pages -- bail.
-	if ( $post_type == 'page' && ! array_key_exists( 'pages', $auto_add_to ) ) {
-		return $content;
-	}
-
-	// This is a post in the archive and we haven't specified to
-	// add the buttons there -- bail.
-	if ( ! is_single() && $post_type == 'post' && ! array_key_exists( 'blog_archive', $auto_add_to ) ) {
-		return $content;
-	}
-
-	// This is a single post page and we haven't specified to
-	// add the buttons there -- bail.
-	if ( is_single() && $post_type == 'post' && ! array_key_exists( 'blog_single', $auto_add_to ) ) {
+	// Bail if this is an archive page and we haven't specified to add buttons to this CPT.
+	if ( ! is_single() && ! array_key_exists( $post_type . '_archive', $auto_add_to ) ) {
 		return $content;
 	}
 
