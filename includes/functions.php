@@ -88,25 +88,13 @@ function nss_auto_add_buttons( $content ) {
 	global $post;
 	$post_type = get_post_type( $post );
 
-	// This isn't a post or a page -- bail.
-	if ( $post_type != 'page' && $post_type != 'post' ) {
+	// Bail if this is a singular page and we haven't specified to add buttons to this CPT.
+	if ( is_single() && ! array_key_exists( $post_type, $auto_add_to ) ) {
 		return $content;
 	}
 
-	// This is a page and we haven't specified to add pages -- bail.
-	if ( $post_type == 'page' && ! array_key_exists( 'pages', $auto_add_to ) ) {
-		return $content;
-	}
-
-	// This is a post in the archive and we haven't specified to
-	// add the buttons there -- bail.
-	if ( ! is_single() && $post_type == 'post' && ! array_key_exists( 'blog_archive', $auto_add_to ) ) {
-		return $content;
-	}
-
-	// This is a single post page and we haven't specified to
-	// add the buttons there -- bail.
-	if ( is_single() && $post_type == 'post' && ! array_key_exists( 'blog_single', $auto_add_to ) ) {
+	// Bail if this is an archive page and we haven't specified to add buttons to this CPT.
+	if ( ! is_single() && ! array_key_exists( $post_type . '_archive', $auto_add_to ) ) {
 		return $content;
 	}
 
@@ -166,3 +154,43 @@ function nss_update_share_numbers() {
 
 add_action( 'wp_ajax_nss_update_share_numbers', 'nss_update_share_numbers' );
 add_action( 'wp_ajax_nopriv_nss_update_share_numbers', 'nss_update_share_numbers' );
+
+/**
+ * Get Supported Custom Post Types
+ *
+ * @since 1.4.0
+ * @return array
+ */
+function nss_get_supported_cpts() {
+	$args       = array(
+		'public' => true
+	);
+	$post_types = get_post_types( $args, 'objects' );
+
+	return apply_filters( 'naked-social-share/get-supports-cpts', $post_types );
+}
+
+/**
+ * Get Page Display Options
+ *
+ * Adds all supported custom post types and, if enabled, their archives.
+ *
+ * @uses  nss_get_supported_cpts()
+ *
+ * @since 1.4.0
+ * @return array
+ */
+function nss_get_display_options() {
+	$cpts          = nss_get_supported_cpts();
+	$final_display = array();
+
+	foreach ( $cpts as $key => $cpt ) {
+		$final_display[ $key ] = sprintf( __( '%s - Single', 'naked-social-share' ), $cpt->label );
+
+		if ( $cpt->has_archive || 'post' == $key ) {
+			$final_display[ $key . '_archive' ] = sprintf( __( '%s - Archive', 'naked-social-share' ), $cpt->label );
+		}
+	}
+
+	return apply_filters( 'naked-social-share/get-cpt-display-options', $final_display, $cpts );
+}
