@@ -76,6 +76,9 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Changelog ==
 
+= 1.4.0 =
+* You can now control the automatic display on all public post types instead of just posts and pages.
+
 = 1.3.4 =
 * Fixed problem with Font Awesome not being loaded, even when checked.
 * Sorry for 5 million updates in such quick succession. I know it sucks.
@@ -173,5 +176,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.3.4 =
-* Fixed problem with Font Awesome not being loaded, even when checked.
+= 1.4.0 =
+* Support for all public post types.
