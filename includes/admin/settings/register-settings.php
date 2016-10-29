@@ -155,11 +155,7 @@ function nss_get_registered_settings() {
 					'desc'    => sprintf( __( 'Choose where you want the buttons to appear automatically. Alternatively, you can add the icons to your theme manually using this function: %s', 'naked-social-shre' ), '<code>naked_social_share_buttons();</code>' ),
 					'type'    => 'multicheck',
 					'std'     => array(),
-					'options' => array(
-						'blog_archive' => __( 'Blog Archives', 'naked-social-share' ),
-						'blog_single'  => __( 'Single Posts', 'naked-social-share' ),
-						'pages'        => __( 'Pages', 'naked-social-share' )
-					)
+					'options' => nss_get_display_options()
 				),
 				'disable_counters' => array(
 					'id'   => 'disable_counters',

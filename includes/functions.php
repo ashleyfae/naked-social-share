@@ -166,3 +166,43 @@ function nss_update_share_numbers() {
 
 add_action( 'wp_ajax_nss_update_share_numbers', 'nss_update_share_numbers' );
 add_action( 'wp_ajax_nopriv_nss_update_share_numbers', 'nss_update_share_numbers' );
+
+/**
+ * Get Supported Custom Post Types
+ *
+ * @since 1.4.0
+ * @return array
+ */
+function nss_get_supported_cpts() {
+	$args       = array(
+		'public' => true
+	);
+	$post_types = get_post_types( $args, 'objects' );
+
+	return apply_filters( 'naked-social-share/get-supports-cpts', $post_types );
+}
+
+/**
+ * Get Page Display Options
+ *
+ * Adds all supported custom post types and, if enabled, their archives.
+ *
+ * @uses  nss_get_supported_cpts()
+ *
+ * @since 1.4.0
+ * @return array
+ */
+function nss_get_display_options() {
+	$cpts          = nss_get_supported_cpts();
+	$final_display = array();
+
+	foreach ( $cpts as $key => $cpt ) {
+		$final_display[ $key ] = sprintf( __( '%s - Single', 'naked-social-share' ), $cpt->label );
+
+		if ( $cpt->has_archive || 'post' == $key ) {
+			$final_display[ $key . '_archive' ] = sprintf( __( '%s - Archive', 'naked-social-share' ), $cpt->label );
+		}
+	}
+
+	return apply_filters( 'naked-social-share/get-cpt-display-options', $final_display, $cpts );
+}

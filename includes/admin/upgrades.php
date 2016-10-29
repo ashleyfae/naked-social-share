@@ -95,4 +95,35 @@ function nss_do_upgrade( $db_version ) {
 		update_option( 'naked_social_share_settings', $new_settings );
 	}
 
+	/*
+	 * 1.4.0 - Migrate display options.
+	 */
+	if ( version_compare( $db_version, '1.4.0', '<' ) ) {
+		$settings    = get_option( 'naked_social_share_settings', array() );
+		$display_on  = array_key_exists( 'auto_add', $settings ) ? $settings['auto_add'] : array();
+		$new_display = array();
+
+		if ( is_array( $display_on ) ) {
+			foreach ( $display_on as $cpt => $value ) {
+				switch ( $cpt ) {
+					case 'blog_archive' :
+						$new_display['post_archive'] = 1;
+						break;
+
+					case 'blog_single' :
+						$new_display['post'] = 1;
+						break;
+
+					case 'pages' :
+						$new_display['page'] = 1;
+						break;
+				}
+			}
+		}
+
+		$settings['auto_add'] = $new_display;
+
+		update_option( 'naked_social_share_settings', $settings );
+	}
+
 }
