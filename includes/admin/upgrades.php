@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function nss_check_upgrades() {
 	$version_number = get_option( 'naked_social_share_version' );
 	if ( ! $version_number ) {
-		$version_number = 0;
+		$version_number = NSS_VERSION;
 	}
 
 	// The versions match - bail.

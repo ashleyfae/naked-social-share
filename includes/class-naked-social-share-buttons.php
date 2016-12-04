@@ -96,7 +96,7 @@ class Naked_Social_Share_Buttons {
 	 */
 	public function __construct( $post = null ) {
 
-		if ( is_a( 'WP_Post', $post ) ) {
+		if ( $post && is_a( $post, 'WP_Post' ) ) {
 			$this->post = $post;
 		} elseif ( is_numeric( $post ) ) {
 			$this->post = get_post( $post );
