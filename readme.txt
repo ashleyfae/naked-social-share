@@ -179,5 +179,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.4.0 =
-* Support for all public post types.
+= 1.4.1 =
+* Updated Font Awesome to version 4.7.0.
