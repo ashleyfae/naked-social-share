@@ -77,7 +77,7 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 == Changelog ==
 
 = 1.4.1 =
-* Update Font Awesome library to version 4.7.0.
+* Updated Font Awesome library to version 4.7.0.
 
 = 1.4.0 =
 * You can now control the automatic display on all public post types instead of just posts and pages.
