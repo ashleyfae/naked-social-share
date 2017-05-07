@@ -24,7 +24,7 @@ function nss_enqueue_assets() {
 
 	// Load Font Awesome if it's enabled.
 	if ( nss_get_option( 'load_fa' ) ) {
-		wp_register_style( 'font-awesome', NSS_PLUGIN_URL . 'assets/css/font-awesome.min.css', array(), '4.3.0' );
+		wp_register_style( 'font-awesome', NSS_PLUGIN_URL . 'assets/css/font-awesome.min.css', array(), '4.7.0' );
 		wp_enqueue_style( 'font-awesome' );
 	}
 
