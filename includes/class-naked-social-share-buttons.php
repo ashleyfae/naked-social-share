@@ -270,7 +270,7 @@ class Naked_Social_Share_Buttons {
 		/*
 		 * Fetch the share numbers for StumbleUpon if it's enabled.
 		 */
-		if ( in_array( 'pinterest', $this->settings['social_sites'] ) ) {
+		if ( in_array( 'stumbleupon', $this->settings['social_sites'] ) ) {
 			$stumble_url      = 'http://www.stumbleupon.com/services/1.01/badge.getinfo?url=' . $this->url;
 			$stumble_response = wp_remote_get( esc_url_raw( $stumble_url ) );
 			// Make sure the response came back okay.
