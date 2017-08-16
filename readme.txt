@@ -3,7 +3,7 @@ Contributors: NoseGraze
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L2TL7ZBVUMG9C
 Tags: social, twitter, facebook, pinterest, stumbleupon, social share
 Requires at least: 3.0
-Tested up to: 4.8
+Tested up to: 4.8.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,10 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 2. A screenshot of the social share icons automatically added to the Twenty Fifteen theme. This also shows the default button styles applied.
 
 == Changelog ==
+
+= 1.4.2 =
+* Fix: StumbleUpon count was only working if Pinterest was also enabled.
+* Fix: Google+ count not working.
 
 = 1.4.1 =
 * Updated Font Awesome library to version 4.7.0.
@@ -179,5 +183,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.4.1 =
-* Updated Font Awesome to version 4.7.0.
+= 1.4.2 =
+* Fix Google+ and StumbleUpon counts.
