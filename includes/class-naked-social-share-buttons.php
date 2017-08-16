@@ -331,56 +331,57 @@ class Naked_Social_Share_Buttons {
 	}
 
 	/**
-	 * GetPlusOnesByURL()
-	 *
 	 * Get the numeric, total count of +1s from Google+ users for a given URL.
 	 *
-	 * @author          Stephan Schmitz <eyecatchup@gmail.com>
-	 * @copyright       Copyright (c) 2014 Stephan Schmitz
-	 * @license         http://eyecatchup.mit-license.org/  MIT License
-	 * @link            <a href="https://gist.github.com/eyecatchup/8495140">Source</a>.
-	 * @link            <a href="http://stackoverflow.com/a/13385591/624466">Read more</a>.
+	 * @source https://stackoverflow.com/a/32569777/4895738
 	 *
-	 * @param   $url    string  The URL to check the +1 count for.
+	 * @param $url string  The URL to check the +1 count for.
 	 *
-	 * @return  int          The total count of +1s.
+	 * @access public
+	 * @return int The total count of +1s.
 	 */
 	public function get_plus_ones( $url ) {
 		if ( empty( $url ) ) {
 			return 0;
 		}
 
-		! filter_var( $url, FILTER_VALIDATE_URL ) &&
-		die( sprintf( 'PHP said, "%s" is not a valid URL.', $url ) );
+		$request_url = 'https://clients6.google.com/rpc';
 
-		foreach ( array( 'apis', 'plusone' ) as $host ) {
-			$ch = curl_init( sprintf( 'https://%s.google.com/u/0/_/+1/fastbutton?url=%s',
-				$host, urlencode( $url ) ) );
-			curl_setopt_array( $ch, array(
-				CURLOPT_FOLLOWLOCATION => 1,
-				CURLOPT_RETURNTRANSFER => 1,
-				CURLOPT_SSL_VERIFYPEER => 0,
-				CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 6.1; WOW64) ' .
-				                          'AppleWebKit/537.36 (KHTML, like Gecko) ' .
-				                          'Chrome/32.0.1700.72 Safari/537.36'
-			) );
-			$response = curl_exec( $ch );
-			$curlinfo = curl_getinfo( $ch );
-			curl_close( $ch );
+		$body = array(
+			'method'     => 'pos.plusones.get',
+			'id'         => 'p',
+			'params'     => array(
+				'nolog'   => true,
+				'id'      => esc_url( $url ),
+				'source'  => 'widget',
+				'userId'  => '@viewer',
+				'groupId' => '@self',
+			),
+			'jsonrpc'    => '2.0',
+			'key'        => 'p',
+			'apiVersion' => 'v1'
+		);
 
-			if ( 200 === $curlinfo['http_code'] && 0 < strlen( $response ) ) {
-				break 1;
-			}
-			$response = 0;
-		}
+		$args = array(
+			'headers' => array(
+				'Content-type' => 'application/json',
+			),
+			'body'    => json_encode( $body )
+		);
 
-		if ( ! isset( $response ) || empty( $response ) ) {
+		$response = wp_remote_post( $request_url, $args );
+
+		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 			return 0;
 		}
 
-		preg_match_all( '/window\.__SSR\s\=\s\{c:\s(\d+?)\./', $response, $match, PREG_SET_ORDER );
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		return ( 1 === sizeof( $match ) && 2 === sizeof( $match[0] ) ) ? intval( $match[0][1] ) : 0;
+		if ( ! is_array( $response_body ) || empty( $response_body['result']['metadata']['globalCounts']['count'] ) ) {
+			return 0;
+		}
+
+		return intval( $response_body['result']['metadata']['globalCounts']['count'] );
 	}
 
 	/**
