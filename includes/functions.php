@@ -89,12 +89,12 @@ function nss_auto_add_buttons( $content ) {
 	$post_type = get_post_type( $post );
 
 	// Bail if this is a singular page and we haven't specified to add buttons to this CPT.
-	if ( is_single() && ! array_key_exists( $post_type, $auto_add_to ) ) {
+	if ( is_singular() && ! array_key_exists( $post_type, $auto_add_to ) ) {
 		return $content;
 	}
 
 	// Bail if this is an archive page and we haven't specified to add buttons to this CPT.
-	if ( ! is_single() && ! array_key_exists( $post_type . '_archive', $auto_add_to ) ) {
+	if ( ! is_singular() && ! array_key_exists( $post_type . '_archive', $auto_add_to ) ) {
 		return $content;
 	}
 
