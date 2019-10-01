@@ -3,7 +3,7 @@ Contributors: NoseGraze
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L2TL7ZBVUMG9C
 Tags: social, twitter, facebook, pinterest, stumbleupon, social share
 Requires at least: 3.0
-Tested up to: 5.0.2
+Tested up to: 5.2.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,9 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 2. A screenshot of the social share icons automatically added to the Twenty Fifteen theme. This also shows the default button styles applied.
 
 == Changelog ==
+
+= 1.5.1 - 1 October 2019 =
+* Fix: Buttons not appearing on the `page` post type.
 
 = 1.5 =
 * New: Font Awesome library updated to version 5.5.
@@ -186,5 +189,5 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 
 == Upgrade Notice ==
 
-= 1.5 =
-* Font Awesome library updated to version 5.5.
+= 1.5.1 =
+* Fix: Buttons not appearing on the page post type.
