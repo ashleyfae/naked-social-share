@@ -443,7 +443,7 @@ class Naked_Social_Share_Buttons {
 						case 'twitter' :
 							?>
 							<li class="nss-twitter">
-								<a href="http://www.twitter.com/intent/tweet?url=<?php echo urlencode( get_permalink( $this->post ) ) ?><?php echo ( ! empty( $twitter_handle ) ) ? '&via=' . $twitter_handle : ''; ?>&text=<?php echo apply_filters( 'naked_social_share_twitter_text', $this->get_title(), $this->post ); ?>" target="_blank">
+								<a href="http://www.twitter.com/intent/tweet?url=<?php echo urlencode( $this->url ) ?><?php echo ( ! empty( $twitter_handle ) ) ? '&via=' . $twitter_handle : ''; ?>&text=<?php echo apply_filters( 'naked_social_share_twitter_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_twitter_icon', '<i class="fab fa-twitter"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'Twitter', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) && $this->share_numbers['twitter'] != 0 ) : ?>
@@ -457,7 +457,7 @@ class Naked_Social_Share_Buttons {
 						case 'facebook' :
 							?>
 							<li class="nss-facebook">
-								<a href="http://www.facebook.com/sharer/sharer.php?u=<?php echo get_permalink( $this->post ); ?>&t=<?php echo apply_filters( 'naked_social_share_facebook_text', $this->get_title(), $this->post ); ?>" target="_blank">
+								<a href="http://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode( $this->url ); ?>&t=<?php echo apply_filters( 'naked_social_share_facebook_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_facebook_icon', '<i class="fab fa-facebook"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'Facebook', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) ) : ?>
@@ -485,7 +485,7 @@ class Naked_Social_Share_Buttons {
 						case 'stumbleupon' :
 							?>
 							<li class="nss-stumbleupon">
-								<a href="http://www.stumbleupon.com/submit?url=<?php echo get_permalink( $this->post ); ?>&title=<?php echo apply_filters( 'naked_social_share_stumbleupon_text', $this->get_title(), $this->post ); ?>" target="_blank">
+								<a href="http://www.stumbleupon.com/submit?url=<?php echo urlencode( $this->url ); ?>&title=<?php echo apply_filters( 'naked_social_share_stumbleupon_text', $this->get_title(), $this->post ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_stumbleupon_icon', '<i class="fab fa-stumbleupon"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'StumbleUpon', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) ) : ?>
@@ -499,7 +499,7 @@ class Naked_Social_Share_Buttons {
 						case 'google' :
 							?>
 							<li class="nss-google">
-								<a href="https://plus.google.com/share?url=<?php echo get_permalink( $this->post ); ?>" target="_blank">
+								<a href="https://plus.google.com/share?url=<?php echo urlencode( $this->url ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_google_icon', '<i class="fab fa-google-plus"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'Google+', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) ) : ?>
@@ -513,7 +513,7 @@ class Naked_Social_Share_Buttons {
 						case 'linkedin' :
 							?>
 							<li class="nss-linkedin">
-								<a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode( get_permalink( $this->post ) ); ?>&title=<?php echo apply_filters( 'naked_social_share_linkedin_text', $this->get_title(), $this->post ); ?>&source=<?php echo urlencode( get_bloginfo( 'name' ) ); ?>" target="_blank">
+								<a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode( $this->url ); ?>&title=<?php echo apply_filters( 'naked_social_share_linkedin_text', $this->get_title(), $this->post ); ?>&source=<?php echo urlencode( get_bloginfo( 'name' ) ); ?>" target="_blank">
 									<?php echo apply_filters( 'naked_social_share_linkedin_icon', '<i class="fab fa-linkedin"></i>' ); ?>
 									<span class="nss-site-name"><?php echo apply_filters( 'naked-social-share/display/site-name/' . $key, __( 'LinkedIn', 'naked-social-share' ) ); ?></span>
 									<?php if ( ! nss_get_option( 'disable_counters' ) ) : ?>
