@@ -3,7 +3,7 @@ Contributors: NoseGraze
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L2TL7ZBVUMG9C
 Tags: social, twitter, facebook, pinterest, stumbleupon, social share
 Requires at least: 3.0
-Tested up to: 5.3
+Tested up to: 5.5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,10 @@ For more details, see this page: https://gist.github.com/nosegraze/f00b510146675
 2. A screenshot of the social share icons automatically added to the Twenty Fifteen theme. This also shows the default button styles applied.
 
 == Changelog ==
+
+= 1.5.2 - 25 October 2020 =
+* Fix: Use `Naked_Social_Share_Buttons::$url` property for all post/page URLs.
+* Improvement: More escaping and URL encoding.
 
 = 1.5.1 - 1 October 2019 =
 * Fix: Buttons not appearing on the `page` post type.
