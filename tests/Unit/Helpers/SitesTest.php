@@ -120,6 +120,10 @@ class SitesTest extends TestCase
         ];
     }
 
+    /**
+     * @covers \Ashleyfae\NakedSocialShare\Helpers\Sites::injectLegacyThirdPartySites()
+     * @throws ReflectionException
+     */
     public function testInjectLegacyThirdPartySitesReturnsSameArrayIfNotFiltered()
     {
         $helper = $this->createPartialMock(Sites::class, []);
@@ -134,6 +138,50 @@ class SitesTest extends TestCase
 
         WP_Mock::expectFilter('naked-social-share/available-sites', ['twitter' => 'Twitter']);
 
-        $this->assertSame(['twitter' => $site], $this->invokeInaccessibleMethod($helper, 'injectLegacyThirdPartySites', ['twitter' => $site]));
+        $this->assertSame(
+            ['twitter' => $site],
+            $this->invokeInaccessibleMethod($helper, 'injectLegacyThirdPartySites', ['twitter' => $site])
+        );
+    }
+
+    /**
+     * @covers \Ashleyfae\NakedSocialShare\Helpers\Sites::injectLegacyThirdPartySites()
+     * @throws ReflectionException
+     */
+    public function testInjectLegacyThirdPartySitesRemovesUnsetSite()
+    {
+        $helper = $this->createPartialMock(Sites::class, []);
+
+        $twitter = Mockery::mock(SocialSite::class);
+        $twitter->expects('getId')
+            ->once()
+            ->andReturn('twitter');
+        $twitter->expects('getName')
+            ->once()
+            ->andReturn('Twitter');
+
+        $facebook = Mockery::mock(SocialSite::class);
+        $facebook->expects('getId')
+            ->once()
+            ->andReturn('facebook');
+        $facebook->expects('getName')
+            ->once()
+            ->andReturn('Facebook');
+
+        WP_Mock::onFilter('naked-social-share/available-sites')
+            ->with([
+                'twitter'  => 'Twitter',
+                'facebook' => 'Facebook',
+            ])
+            ->reply(['twitter' => 'Twitter']);
+
+        $this->assertSame(
+            ['twitter' => $twitter],
+            $this->invokeInaccessibleMethod(
+                $helper,
+                'injectLegacyThirdPartySites',
+                ['twitter' => $twitter, 'facebook' => $facebook]
+            )
+        );
     }
 }
