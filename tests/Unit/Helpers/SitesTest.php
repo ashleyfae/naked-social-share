@@ -132,7 +132,7 @@ class SitesTest extends TestCase
             ->once()
             ->andReturn('Twitter');
 
-        WP_Mock::expectFilter('naked-social-share/available-filters', ['twitter' => 'Twitter']);
+        WP_Mock::expectFilter('naked-social-share/available-sites', ['twitter' => 'Twitter']);
 
         $this->assertSame(['twitter' => $site], $this->invokeInaccessibleMethod($helper, 'injectLegacyThirdPartySites', ['twitter' => $site]));
     }
