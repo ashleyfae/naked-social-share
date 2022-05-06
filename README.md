@@ -36,7 +36,7 @@ The share counters are cached for 3 hours to improve loading times and to avoid 
 
 **How can I extend the plugin to add a new site?**
 
-You can add a new site using filters and actions from the plugin. Here's an example showing how to create an add-on plugin to add 'Email' as a social site option: https://gist.github.com/nosegraze/73e950885fdbbecb20fe
+You can add a new site using filters and actions from the plugin. Here's an example showing how to create an add-on plugin to add 'Email' as a social site option: https://gist.github.com/ashleyfae/73e950885fdbbecb20fe
 
 **How can I change the font awesome icons?**
 
@@ -49,7 +49,7 @@ function nss_addon_twitter_icon( $icon_html ) {
 add_filter( 'naked_social_share_twitter_icon', 'nss_addon_twitter_icon' );
 ```
 
-For more details, see this page: https://gist.github.com/nosegraze/f00b5101466752213e2d
+For more details, see this page: https://gist.github.com/ashleyfae/f00b5101466752213e2d
 
 ## Changelog
 
