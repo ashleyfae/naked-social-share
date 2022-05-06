@@ -2,6 +2,7 @@
 Contributors: NoseGraze
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L2TL7ZBVUMG9C
 Tags: social, twitter, facebook, pinterest, stumbleupon, social share
+Requires PHP: 7.4
 Requires at least: 3.0
 Tested up to: 5.5.2
 Stable tag: trunk
