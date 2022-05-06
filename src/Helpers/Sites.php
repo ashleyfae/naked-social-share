@@ -11,6 +11,7 @@
 namespace Ashleyfae\NakedSocialShare\Helpers;
 
 use Ashleyfae\NakedSocialShare\Contracts\SocialSite;
+use Ashleyfae\NakedSocialShare\Exceptions\InvalidSiteException;
 use Ashleyfae\NakedSocialShare\Plugin;
 use Ashleyfae\NakedSocialShare\SocialSites\Facebook;
 use Ashleyfae\NakedSocialShare\SocialSites\LinkedIn;
@@ -28,9 +29,32 @@ class Sites
         LinkedIn::class,
     ];
 
+    /**
+     * Returns the list of registered site class names.
+     *
+     * @since 2.0.0
+     *
+     * @return array
+     */
+    protected function getSiteClassNames(): array
+    {
+        /**
+         * Filters the sites.
+         *
+         * @since 2.0.0
+         */
+        return apply_filters('naked-social-share/sites', $this->sites);
+    }
+
+    /**
+     * Returns the objects of all available sites.
+     *
+     * @since 2.0.0
+     *
+     * @return SocialSite[]
+     */
     public function getAvailable(): array
     {
-        // @todo filter this
         return $this->injectLegacyThirdPartySites(
             $this->makeAvailableSites()
         );
@@ -47,14 +71,45 @@ class Sites
     {
         $sites = [];
 
-        foreach ($this->sites as $siteClass) {
-            /** @var SocialSite $site */
-            $site = Plugin::instance()->make($siteClass);
+        foreach ($this->getSiteClassNames() as $siteClass) {
+            try {
+                $site = $this->makeSiteFromClassName($siteClass);
 
-            $sites[$site->getId()] = $site;
+                $sites[$site->getId()] = $site;
+            } catch (InvalidSiteException $e) {
+                error_log($e->getMessage());
+            }
         }
 
         return $sites;
+    }
+
+    /**
+     * Creates a SocialSite object from a class name.
+     *
+     * @since 2.0.0
+     *
+     * @param  string  $siteClass
+     *
+     * @return SocialSite
+     * @throws InvalidSiteException
+     */
+    protected function makeSiteFromClassName(string $siteClass): SocialSite
+    {
+        if (! class_exists($siteClass)) {
+            throw new InvalidSiteException("The {$siteClass} class does not exist.");
+        }
+
+        $site = Plugin::instance()->make($siteClass);
+
+        if (! $site instanceof SocialSite) {
+            throw new InvalidSiteException(sprintf(
+                "The {$siteClass} class must implement the %s interface.",
+                SocialSite::class
+            ));
+        }
+
+        return $site;
     }
 
     /**
@@ -78,5 +133,14 @@ class Sites
 
         // Removes any sites that have been removed.
         $sites = array_intersect_key($sites, $backwardsCompatSites);
+
+        // Add any extra sites.
+
+        return $sites;
+    }
+
+    protected function makeThirdPartySocialSite(string $siteId, string $siteName): SocialSite
+    {
+
     }
 }
