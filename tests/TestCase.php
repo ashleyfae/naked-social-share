@@ -95,6 +95,19 @@ class TestCase extends \WP_Mock\Tools\TestCase
     }
 
     /**
+     * This method is here until this PR is merged:
+     *
+     * @link https://github.com/10up/wp_mock/issues/158
+     */
+    protected function getAnnotations(): array
+    {
+        return \PHPUnit\Util\Test::parseTestMethodAnnotations(
+            static::class,
+            $this->getName( false )
+        );
+    }
+
+    /**
      * Mock a static method of a class.
      *
      * Copied from {@see WP_Mock\Tools\TestCase::mockStaticMethod()}.

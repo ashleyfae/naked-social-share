@@ -8,6 +8,11 @@
       "Ashleyfae\\NakedSocialShare\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Ashleyfae\\NakedSocialShare\\Tests\\": "tests/"
+    }
+  },
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.4",
