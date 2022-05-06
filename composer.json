@@ -1,15 +1,27 @@
 {
-    "name": "ashleyfae/naked-social-share",
-    "description": "Simple, unstyled social share icons for theme designers.",
-    "type": "wordpress-plugin",
-    "license": "GPL-2.0-or-later",
-    "autoload": {
-        "psr-4": {
-            "Ashleyfae\\NakedSocialShare\\": "src/"
-        }
-    },
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=7.4"
+  "name": "ashleyfae/naked-social-share",
+  "description": "Simple, unstyled social share icons for theme designers.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "Ashleyfae\\NakedSocialShare\\": "src/"
     }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.4",
+    "ashleyfae/laravel-container": "^1.0"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/ashleyfae/laravel-container"
+    }
+  ],
+  "require-dev": {
+    "10up/wp_mock": "0.4.2",
+    "mockery/mockery": "^1.5",
+    "phpunit/phpunit": "9.5.20"
+  }
 }
