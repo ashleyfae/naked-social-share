@@ -1,0 +1,15 @@
+{
+    "name": "ashleyfae/naked-social-share",
+    "description": "Simple, unstyled social share icons for theme designers.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Ashleyfae\\NakedSocialShare\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.4"
+    }
+}
