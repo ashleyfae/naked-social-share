@@ -10,8 +10,11 @@
  * Text Domain: naked-social-share
  * Domain Path: lang
  *
+ * Requires at least: 3.0
+ * Requires PHP: 7.4
+ *
  * @package   naked-social-share
- * @copyright Copyright (c) 2015, Ashley Evans
+ * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
  *
  * This program is free software; you can redistribute it and/or modify
