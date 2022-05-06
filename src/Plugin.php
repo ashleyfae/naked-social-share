@@ -9,7 +9,11 @@
 
 namespace Ashleyfae\NakedSocialShare;
 
+use Ashleyfae\LaravelContainer\Container;
+
 /**
+ * @mixin Container
+ *
  * @since 2.0 Renamed from `Naked_Social_Share`
  */
 class Plugin
@@ -21,6 +25,22 @@ class Plugin
      * @since 1.0.0
      */
     protected static ?Plugin $instance = null;
+
+    /**
+     * @var Container
+     * @since 2.0.0
+     */
+    protected Container $container;
+
+    /**
+     * Constructor
+     *
+     * @since 2.0.0
+     */
+    public function __construct()
+    {
+        $this->container = new Container();
+    }
 
     /**
      * Retrieves the single instance of this class.
@@ -60,6 +80,21 @@ class Plugin
     public function __wakeup()
     {
         // Unserializing instances of the class is forbidden.
+    }
+
+    /**
+     * Forwards method calls to the container.
+     *
+     * @since 2.0.0
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array([$this->container, $name], $arguments);
     }
 
     /**
